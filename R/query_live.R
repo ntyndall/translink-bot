@@ -39,4 +39,18 @@ query_live <- function(stationCode) {
     X = rest,
     FUN = function(x) x %>% lapply(as.data.frame) %>% purrr::reduce(rbind)
   )
+  
+  # Manually update these for now
+  names(myresults[[2]]) <- c("arrivetime", "arrived", "arrivedtstamp")
+  names(myresults[[7]]) <- c("originname", "origintiploc", "origincrs")
+  
+  # Create data frame
+  myresults %<>% purrr::reduce(cbind)
+  
+  return(
+    list(
+      myresults = myresults,
+      callingpoints = callingpoints
+    )
+  )
 }
