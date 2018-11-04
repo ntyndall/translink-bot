@@ -14,5 +14,6 @@ Imports:
   magrittr,
   purrr,
   httr,
-  yaml
+  yaml,
+  plumber
 RoxygenNote: 6.0.1
