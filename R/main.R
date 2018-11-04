@@ -3,14 +3,16 @@
 #' @export
 
 
-main <- function(allInfo) {
+main <- function(allInfo, logger = FALSE) {
   
   # Parse the input & get start and stop stations
+  if (logger) cat(crayon::green(" | Parsing message \n"))
   myStations <- allInfo$event$text %>% translink.bot::parse_message()
   startStation <- myStations$startStation
   stopStation <- myStations$stopStation
   
   # Load up station list
+  if (logger) cat(crayon::green(" | Getting available stations \n"))
   station.list <- translink.bot::get_stations()
   
   # Lower case everything
@@ -18,6 +20,7 @@ main <- function(allInfo) {
   stopStation %<>% Hmisc::upFirst()
   
   # Get the start code
+  if (logger) cat(crayon::green(" | Checking input against station list \n"))
   startCode <- station.list$code %>% 
     `[`(startStation %>% 
           stringdist::stringdist(station.list$name, method = 'jw') %>%
@@ -25,6 +28,7 @@ main <- function(allInfo) {
        )
   
   # Get calling information
+  if (logger) cat(crayon::green(" | Sending query \n"))
   allresults <- startCode %>% 
     translink.bot::query_live()
   
@@ -33,6 +37,7 @@ main <- function(allInfo) {
   
   
   # Check the calling points, i.e. get ids in the right direction
+  if (logger) cat(crayon::green(" | Parsing calling points \n"))
   correctWay <- lapply(
     X = allresults$callingpoints,
     FUN = function(x) if (stopStation %in% (x %>% `[[`("Name") %>% as.character)) T else F 
@@ -44,6 +49,7 @@ main <- function(allInfo) {
   allresults$myresults %<>% subset(correctWay)
   
   # Need to do some slack stuff here (i.e. just post result!)
+  if (logger) cat(crayon::green(" | Responding to slack \n"))
   mybody <- list(
     token = Sys.getenv("SLACK_TOKEN"), 
     text = allresults$myresults$time[1],
