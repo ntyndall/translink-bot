@@ -3,5 +3,7 @@
 export(allowed_tags)
 export(api)
 export(get_stations)
+export(main)
 export(next_trains)
+export(parse_message)
 export(query_live)
