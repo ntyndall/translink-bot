@@ -52,7 +52,7 @@ main <- function(allInfo, logger = FALSE) {
   if (logger) cat(crayon::green(" | Responding to slack \n"))
   mybody <- list(
     token = Sys.getenv("SLACK_TOKEN"), 
-    text = allresults$myresults$time[1],
+    text = allresults$myresults$time[1] %>% as.charater,
     channel = "CDV2M38KG"
   )
   
