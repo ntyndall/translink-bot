@@ -15,5 +15,7 @@ Imports:
   purrr,
   httr,
   yaml,
-  plumber
+  plumber,
+  stringdist,
+  jsonlite
 RoxygenNote: 6.0.1
