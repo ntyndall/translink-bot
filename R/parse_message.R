@@ -76,6 +76,9 @@ parse_message <- function(event, dbr) {
         swapUp <- FALSE
       }
       
+      print(keyWord)
+      print(favNames)
+      print("-------")
       if (keyWord %in% favNames) {
         specialRoute <- dbr$GET(
           key = allFavs[keyWord %>% `==`(favNames) %>% which]
@@ -83,9 +86,10 @@ parse_message <- function(event, dbr) {
         
         specialRoute %<>% strsplit(split = ":") %>% purrr::flatten_chr()
         
+        print(specialRoute)
         if (swapUp) specialRoute %<>% rev
         startSt <- specialRoute[1]
-        stopST <- specialRoute[2]
+        stopSt <- specialRoute[2]
       }
     }
   }
