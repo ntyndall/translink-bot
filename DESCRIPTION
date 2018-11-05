@@ -19,5 +19,6 @@ Imports:
   stringdist,
   jsonlite,
   xml2,
-  redux
+  redux,
+  utils
 RoxygenNote: 6.0.1
