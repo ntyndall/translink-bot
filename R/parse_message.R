@@ -51,7 +51,11 @@ parse_message <- function(event, dbr) {
       allFavs %<>% purrr::flatten_chr()
       
       # Favourite names
-      favNames <- allFavs %>% strsplit(":") %>% purrr::flatten_chr()
+      favNames <- allFavs %>% 
+        strsplit(":") %>% 
+        purrr::flatten_chr() %>%
+        purrr::map(3) %>% 
+        purrr::flatten_chr()
       
       keyWord <- myMessage[2]
       
