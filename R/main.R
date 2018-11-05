@@ -3,11 +3,20 @@
 #' @export
 
 
-main <- function(allInfo, logger = FALSE) {
+main <- function(req, logger = FALSE) {
+  
+  # Get request content
+  allInfo <- req$postBody %>% jsonlite::fromJSON() 
+  
+  # Append the teamID onto the event!
+  allInfo$event$team <- allInfo$team_id
   
   # Parse the input & get start and stop stations
   if (logger) cat(crayon::green(" | Parsing message \n"))
-  myStations <- allInfo$event$text %>% translink.bot::parse_message()
+  myStations <- allInfo$event %>% 
+    translink.bot::parse_message(
+      dbr = req$dbr
+  )
   startStation <- myStations$startStation
   stopStation <- myStations$stopStation
   
