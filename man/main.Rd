@@ -4,5 +4,5 @@
 \alias{main}
 \title{Main}
 \usage{
-main(allInfo)
+main(allInfo, logger = FALSE)
 }

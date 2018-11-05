@@ -16,8 +16,8 @@ main <- function(allInfo, logger = FALSE) {
   station.list <- translink.bot::get_stations()
   
   # Lower case everything
-  startStation %<>% Hmisc::upFirst()
-  stopStation %<>% Hmisc::upFirst()
+  startStation %<>% tolower %>% Hmisc::upFirst()
+  stopStation %<>% tolower %>% Hmisc::upFirst()
   
   # Get the start code
   if (logger) cat(crayon::green(" | Checking input against station list \n"))
