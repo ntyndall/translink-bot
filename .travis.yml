@@ -1,0 +1,17 @@
+language: r
+cache: packages
+sudo: false
+warnings_are_errors: false
+addons:
+   apt:
+     packages:
+       - libgsl0-dev
+       - libxml2-dev
+       - libhiredis-dev
+       - libgit2-dev
+services: 
+   - redis-server
+
+after_success:
+  - Rscript -e 'covr::codecov()'
+

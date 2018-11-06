@@ -20,5 +20,6 @@ Imports:
   jsonlite,
   xml2,
   redux,
-  utils
+  utils,
+  covr
 RoxygenNote: 6.0.1
