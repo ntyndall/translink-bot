@@ -20,8 +20,9 @@ parse_message <- function(event, dbr) {
   
   # Check existence
   if (setTag %>% any) {
-    tagKey <- myMessage %>% `[`(setTag %>% which + 1)
-    tagKey <- paste0(event$team, ":", event$user, ":", tagKey)
+    favouriteName <- myMessage %>% `[`(setTag %>% which + 1)
+    if (favouriteName %in% c("all", "info", "delete")) stop("just exit from here")
+    tagKey <- paste0(event$team, ":", event$user, ":", favouriteName)
   }
   
   # Parse out mention of userID <@...>
@@ -43,49 +44,89 @@ parse_message <- function(event, dbr) {
       )
     } 
   } else {
-    # Look up favourites
+    
+    # Create function for matching the input
+    which_tag <- function(mess, tag) mess[tag %>% `==`(mess) %>% which %>% `+`(1)]
+    
+    # Look up ALL favourites
     allFavs <- paste0(event$team, ":", event$user, "*") %>% 
       dbr$KEYS()
     
-    if (allFavs %>% length %>% `>`(0)) {
-      allFavs %<>% purrr::flatten_chr()
+    # Check for an action
+    if ("delete" %in% myMessage) {
+      redpipe <- redux::redis
       
-      # Favourite names
-      favNames <- allFavs %>% 
-        strsplit(":") %>%
-        purrr::map(3) %>% 
-        purrr::flatten_chr()
-      
-      keyWord <- myMessage[2]
-      
-      splitUp <- keyWord %>% 
-        strsplit("") %>%
-        purrr::flatten_chr()
-      
-      # Check to see if message is inound or outbound 
-      lastChr <- splitUp %>% 
-        utils::tail(1)
-      
-      if (lastChr %>% `==`("'")) {
-        keyWord <- splitUp %>% 
-          utils::head(-1) %>% 
-          paste(collapse = "")
-        swapUp <- TRUE
-      } else {
-        swapUp <- FALSE
-      }
-
-      if (keyWord %in% favNames) {
-        specialRoute <- dbr$GET(
-          key = allFavs[keyWord %>% `==`(favNames) %>% which]
+      kword <- which_tag(myMessage, "delete")
+      if (kword == "all") {
+        results <- dbr$pipeline(
+          .commands = lapply(
+            X = allFavs,
+            FUN = function(x) x %>% redpipe$DEL()
+          )
         )
-        
-        specialRoute %<>% strsplit(split = ":") %>% purrr::flatten_chr()
-
-        if (swapUp) specialRoute %<>% rev
-        startSt <- specialRoute[1]
-        stopSt <- specialRoute[2]
+      } else {
+        results <- dbr$DEL()
       }
+      additionalMsg <- "Deleting info"
+      
+    } else if ("info" %in% myMessage) {
+      kword <- which_tag(myMessage, "info")
+      if (kword == "all") {
+        results <- dbr$pipeline(
+          .commands = lapply(
+            X = allFavs,
+            FUN = function(x) x %>% redpipe$GET()
+          )
+        )
+      } else {
+        results <-  dbr$GET() 
+      }
+      
+      additionalMsg <- "Getting info"
+    } else {
+      # Check for user-created tags
+      if (allFavs %>% length %>% `>`(0)) {
+        allFavs %<>% purrr::flatten_chr()
+        
+        # Favourite names
+        favNames <- allFavs %>% 
+          strsplit(":") %>%
+          purrr::map(3) %>% 
+          purrr::flatten_chr()
+        
+        keyWord <- myMessage[2]
+        
+        splitUp <- keyWord %>% 
+          strsplit("") %>%
+          purrr::flatten_chr()
+        
+        # Check to see if message is inound or outbound 
+        lastChr <- splitUp %>% 
+          utils::tail(1)
+        
+        if (lastChr %>% `==`("'")) {
+          keyWord <- splitUp %>% 
+            utils::head(-1) %>% 
+            paste(collapse = "")
+          swapUp <- TRUE
+        } else {
+          swapUp <- FALSE
+        }
+        
+        if (keyWord %in% favNames) {
+          specialRoute <- dbr$GET(
+            key = allFavs[keyWord %>% `==`(favNames) %>% which]
+          )
+          
+          specialRoute %<>% strsplit(split = ":") %>% purrr::flatten_chr()
+          
+          if (swapUp) specialRoute %<>% rev
+          startSt <- specialRoute[1]
+          stopSt <- specialRoute[2]
+        }
+        additionalMsg <- "Setting favourite info"
+      }
+      additionalMsg <- NULL
     }
   }
   
@@ -93,7 +134,8 @@ parse_message <- function(event, dbr) {
   return(
     list(
       startStation = startSt,
-      stopStation = stopSt
+      stopStation = stopSt,
+      additionalMsg = additionalMsg
     )
   )
 }
