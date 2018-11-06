@@ -21,5 +21,9 @@ Imports:
   xml2,
   redux,
   utils,
-  covr
+  covr,
+  testthat,
+  organisR
+Remotes:
+  ntyndall/organisR
 RoxygenNote: 6.0.1
