@@ -1,5 +1,7 @@
 #' @title Main
 #' 
+#' @importFrom magrittr %>% %<>%
+#'
 #' @export
 
 
