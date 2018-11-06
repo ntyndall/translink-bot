@@ -25,6 +25,8 @@ parse_message <- function(event, dbr) {
     tagKey <- paste0(event$team, ":", event$user, ":", favouriteName)
   }
   
+  additionalMsg <- NULL
+  
   # Parse out mention of userID <@...>
   # myMessage %>% gsub(pattern = "<@\\w+> ", replacement = "")
   
@@ -42,7 +44,7 @@ parse_message <- function(event, dbr) {
         key = tagKey,
         value = paste0(startSt, ":", stopSt)
       )
-    } 
+    }
   } else {
     
     # Create function for matching the input
@@ -137,7 +139,7 @@ parse_message <- function(event, dbr) {
     list(
       startStation = startSt,
       stopStation = stopSt,
-      additionalMsg = additionalMsg
+      updateAction = additionalMsg
     )
   )
 }
