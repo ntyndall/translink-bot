@@ -70,6 +70,8 @@ parse_message <- function(event, dbr) {
       additionalMsg <- "Deleting info"
       
     } else if ("info" %in% myMessage) {
+      redpipe <- redux::redis
+      
       kword <- which_tag(myMessage, "info")
       if (kword == "all") {
         results <- dbr$pipeline(
@@ -79,7 +81,7 @@ parse_message <- function(event, dbr) {
           )
         )
       } else {
-        results <-  dbr$GET() 
+        results <- dbr$GET() 
       }
       
       additionalMsg <- "Getting info"

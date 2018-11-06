@@ -4,5 +4,5 @@
 \alias{parse_message}
 \title{Parse Message}
 \usage{
-parse_message(myMessage)
+parse_message(event, dbr)
 }
