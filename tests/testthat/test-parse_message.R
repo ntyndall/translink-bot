@@ -40,4 +40,6 @@ test_that("Make sure favourites can be set.", {
   # Check keyword has been set in redis
   expect_equal( paste0(event$team, ":", event$user, ":home") %>% dbr$GET(), "a:b" )
   
+  dbr$FLUSHDB()
+
 })
