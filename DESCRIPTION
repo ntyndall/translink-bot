@@ -23,7 +23,8 @@ Imports:
   utils,
   covr,
   testthat,
-  organisR
+  organisR,
+  R6
 Remotes:
   ntyndall/organisR
 RoxygenNote: 6.0.1
