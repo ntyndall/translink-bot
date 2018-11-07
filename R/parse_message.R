@@ -21,7 +21,7 @@ parse_message <- function(event, dbr) {
   # Check existence
   if (setTag %>% any) {
     favouriteName <- myMessage %>% `[`(setTag %>% which + 1)
-    if (favouriteName %in% c("all", "info", "delete")) stop("just exit from here")
+    if (favouriteName %in% c("all", "info", "delete", "all")) stop("just exit from here")
     tagKey <- paste0(event$team, ":", event$user, ":", favouriteName)
   }
   
@@ -45,14 +45,19 @@ parse_message <- function(event, dbr) {
         value = paste0(startSt, ":", stopSt)
       )
     }
+    retValues <- list(
+      startSt = startSt,
+      stopSt = stopSt,
+      updateAction = additionalMsg
+    )
   } else {
-    
-    # Create function for matching the input
-    which_tag <- function(mess, tag) mess[tag %>% `==`(mess) %>% which %>% `+`(1)]
-    
+
     # Look up ALL favourites
     allFavs <- paste0(event$team, ":", event$user, "*") %>% 
       dbr$KEYS()
+    
+    # Flatten list of favourites
+    allFavs %<>% purrr::flatten_chr()
     
     # Check for an action
     if ("delete" %in% myMessage) {
@@ -69,24 +74,17 @@ parse_message <- function(event, dbr) {
       } else {
         results <- dbr$DEL()
       }
-      additionalMsg <- "Deleting info"
-      
+      retValues <- list(
+        startSt = NULL,
+        stopSt = NULL,
+        updateAction = "Deleting info"
+      )
     } else if ("info" %in% myMessage) {
-      redpipe <- redux::redis
-      
-      kword <- which_tag(myMessage, "info")
-      if (kword == "all") {
-        results <- dbr$pipeline(
-          .commands = lapply(
-            X = allFavs,
-            FUN = function(x) x %>% redpipe$GET()
-          )
+      retValues <- dbr %>% 
+        translink.bot::parse_info(
+          allFavs = allFavs, 
+          myMessage = myMessage
         )
-      } else {
-        results <- dbr$GET() 
-      }
-      
-      additionalMsg <- "Getting info"
     } else {
       # Check for user-created tags
       if (allFavs %>% length %>% `>`(0)) {
@@ -130,16 +128,15 @@ parse_message <- function(event, dbr) {
         }
         additionalMsg <- "Setting favourite info"
       }
-      additionalMsg <- NULL
+      
+      retValues <- list(
+        startSt = startSt,
+        stopSt = stopSt,
+        updateAction = additionalMsg
+      )
     }
   }
   
   # Return station list back
-  return(
-    list(
-      startStation = startSt,
-      stopStation = stopSt,
-      updateAction = additionalMsg
-    )
-  )
+  return(retValues)
 }
