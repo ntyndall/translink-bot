@@ -1,4 +1,5 @@
 # translink-bot
+[![Build Status](https://travis-ci.org/ntyndall/translink.bot.svg?branch=master)](https://travis-ci.org/ntyndall/translink.bot)
 
 # Usage
 Mention the bot name `@trains` and use one of the following commands
