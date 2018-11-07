@@ -6,7 +6,7 @@ library(organisR)
 
 # Run the tests
 results <- testthat::test_dir(
-  path = "tests/testthat",
+  path = "testthat",
   reporter = "summary"
 )
 
