@@ -9,6 +9,7 @@ event <- list(
 # Set up REDIS connection
 dbr <- redux::hiredis()
 
+
 test_that("Check `to` statement.", {
 
   # Add text
@@ -23,6 +24,7 @@ test_that("Check `to` statement.", {
   expect_null( results$updateAction )
 
 })
+
 
 test_that("Check `set to` statement plus retrieval.", {
   
@@ -89,6 +91,35 @@ test_that("Check `info` and `all` statements.", {
     expect_gt( results$updateAction %>% nchar, 0 )
   }
 
+  # Flush DB
+  dbr$FLUSHDB()
+  
+})
+
+
+test_that("Check `delete` and `all` statements.", {
+  
+  # Get information
+  for (i in c("all", "home")) {
+    # Set a favourite first
+    event$text <- "<> set home a to b"
+    results <- event %>% 
+      translink.bot::parse_message(
+        dbr = dbr
+      )
+
+    event$text <- paste0("<> delete ", i)
+    results <- event %>% 
+      translink.bot::parse_message(
+        dbr = dbr
+      )
+    
+    # Information has been appended
+    expect_null( results$startStation )
+    expect_null( results$stopStation )
+    expect_gt( results$updateAction %>% nchar, 0 )
+  }
+  
   # Flush DB
   dbr$FLUSHDB()
   
