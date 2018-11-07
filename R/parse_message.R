@@ -57,28 +57,15 @@ parse_message <- function(event, dbr) {
       dbr$KEYS()
     
     # Flatten list of favourites
-    allFavs %<>% purrr::flatten_chr()
+    if (allFavs %>% length %>% `>`(0)) allFavs %<>% purrr::flatten_chr()
     
     # Check for an action
     if ("delete" %in% myMessage) {
-      redpipe <- redux::redis
-      
-      kword <- which_tag(myMessage, "delete")
-      if (kword == "all") {
-        results <- dbr$pipeline(
-          .commands = lapply(
-            X = allFavs,
-            FUN = function(x) x %>% redpipe$DEL()
-          )
+      retValues <- dbr %>% 
+        translink.bot::parse_delete(
+          allFavs = allFavs, 
+          myMessage = myMessage
         )
-      } else {
-        results <- dbr$DEL()
-      }
-      retValues <- list(
-        startSt = NULL,
-        stopSt = NULL,
-        updateAction = "Deleting info"
-      )
     } else if ("info" %in% myMessage) {
       retValues <- dbr %>% 
         translink.bot::parse_info(
@@ -88,8 +75,6 @@ parse_message <- function(event, dbr) {
     } else {
       # Check for user-created tags
       if (allFavs %>% length %>% `>`(0)) {
-        allFavs %<>% purrr::flatten_chr()
-        
         # Favourite names
         favNames <- allFavs %>% 
           strsplit(":") %>%
