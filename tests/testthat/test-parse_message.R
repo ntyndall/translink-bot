@@ -64,3 +64,32 @@ test_that("Check `set to` statement plus retrieval.", {
   dbr$FLUSHDB()
 
 })
+
+
+test_that("Check `info` and `all` statements.", {
+  
+  # Set a favourite first
+  event$text <- "<> set home a to b"
+  results <- event %>% 
+    translink.bot::parse_message(
+      dbr = dbr
+    )
+
+  # Get information
+  for (i in c("all", "home")) {
+    event$text <- paste0("<> info ", i)
+    results <- event %>% 
+      translink.bot::parse_message(
+        dbr = dbr
+      )
+    
+    # Information has been appended
+    expect_null( results$startStation )
+    expect_null( results$stopStation )
+    expect_gt( results$updateAction %>% nchar, 0 )
+  }
+
+  # Flush DB
+  dbr$FLUSHDB()
+  
+})
