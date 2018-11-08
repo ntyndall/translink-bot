@@ -2,7 +2,7 @@
 % Please edit documentation in R/parse_delete.R
 \name{parse_delete}
 \alias{parse_delete}
-\title{Parse Info}
+\title{Parse Delete Favourites}
 \usage{
-parse_delete(dbr, allFavs, myMessage)
+parse_delete(dbr, event)
 }

@@ -3,7 +3,7 @@
 #' @export
 
 
-parse_trains <- function(dbr, event) {
+parse_trains <- function(event) {
   
   # Get the actual message
   myMessage <- event$text
@@ -17,15 +17,15 @@ parse_trains <- function(dbr, event) {
       which
     
     # Parse out stations
-    startSt <- myMessage[myInd %>% `-`(1)]
-    stopSt <- myMessage[myInd %>% `+`(1)]
+    startSt <- myMessage[1:(myInd %>% `-`(1))]
+    stopSt <- myMessage[(myInd %>% `+`(1)):(myMessage %>% length)]
 
     # Get station list
     station.list <- translink.bot::get_stations()
 
     # Upper-case first character
-    startSt %<>% tolower %>% Hmisc::upFirst()
-    stopSt %<>% tolower %>% Hmisc::upFirst()
+    startSt %<>% translink.bot::format_name()
+    stopSt %<>% translink.bot::format_name()
 
     # Get the start code
     startCode <- station.list$code %>% 
