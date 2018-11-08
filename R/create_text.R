@@ -5,20 +5,25 @@
 
 create_text <- function(incoming, startStation, stopStation) {
   
-  #incoming <- allresults$myresults
+  # Get ETA's
+  etas <- allresults$callingpoints %>% 
+    lapply(
+      FUN = function(x) x %>% `[[`("etarr") %>% `[`(x %>% nrow) %>% as.character
+    ) %>% 
+    purrr::flatten_chr()
+  
+  incoming <- allresults$myresults
   incoming %<>% lapply(as.character)
   
-  # Convert to time hh:mm
-  incoming$time %<>% 
-    strsplit(split = "") %>%
-    purrr::map(function(x) paste0(paste(x[1:2], collapse = ""), ":", paste(x[3:4], collapse = ""))) %>%
-    purrr::flatten_chr()
+  # Convert various timestamps to hh:mm
+  etas %<>% translink.bot::conv_time()
+  incoming$time %<>% translink.bot::conv_time()
    
   # Header text
   headTxt <- paste0("Trains from *", startStation, "* to * ", stopStation, "* (", incoming$originname[1], "/", incoming$name[1], " line)")
   
   # Start to accumulate information
-  infoTxt <- paste0(" - Next train at : ", incoming$time)
+  infoTxt <- paste0(" - Depart : *", incoming$time, "* // Arrive : *", etas, "*")
     
   # Chceck if any trains are delayed
   delayedTr <- incoming$Status %>% 

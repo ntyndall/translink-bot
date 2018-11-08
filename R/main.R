@@ -76,7 +76,7 @@ main <- function(req, logger = FALSE) {
       allresults$callingpoints %<>% `[`(correctWay)
       allresults$myresults %<>% subset(correctWay)
       
-      slacktext <- allresults$myresults %>% 
+      slacktext <- allresults %>% 
         translink.bot::create_text(
           startStation = startStation,
           stopStation = stopStation
