@@ -13,6 +13,15 @@ parse_req <- function(bodyTxt) {
     httr::parse_url() %>%
     `[[`("query")
 
+  # Log to the API
+  cat(
+    bodyTxt$token, ":",
+    bodyTxt$team_domain, "~", bodyTxt$team_id, "|",
+    bodyTxt$channel_name, "~", bodyTxt$channel_id, "|",
+    bodyTxt$user_name, "~", bodyTxt$user_id, "\n",
+    bodyTxt$text
+  )
+
   # Update the incoming message
   bodyTxt$text %<>%
     strsplit(split = "[+]") %>% 
