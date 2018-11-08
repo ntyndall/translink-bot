@@ -3,6 +3,7 @@
 export(StationInfo)
 export(allowed_tags)
 export(api)
+export(create_text)
 export(get_stations)
 export(main)
 export(next_trains)
