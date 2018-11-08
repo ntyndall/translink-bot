@@ -3,7 +3,7 @@
 #' @export
 
 
-create_text <- function(incoming, startStation, stopStation) {
+create_text <- function(allresults, startStation, stopStation) {
   
   # Get ETA's
   etas <- allresults$callingpoints %>% 
