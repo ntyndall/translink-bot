@@ -63,7 +63,7 @@ main <- function(req, logger = FALSE) {
     allresults$myresults %<>% subset(correctWay)
     
     slacktext <- allresults$myresults %>% 
-      tanslink.bot::create_text()
+      translink.bot::create_text()
     
     mybody <- list(
       token = Sys.getenv("SLACK_TOKEN"), 
