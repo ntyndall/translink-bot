@@ -27,7 +27,8 @@ parse_info <- function(dbr, event) {
     # Get all keywords
     kwords <- myMessage %>% 
       strsplit(split = " ") %>% 
-      purrr::flatten_chr()
+      purrr::flatten_chr() %>% 
+      tolower
     
     # Check intersection
     multikw <- kwords %>% intersect(allkwords)
@@ -66,7 +67,7 @@ parse_info <- function(dbr, event) {
 
     slackTxt <- paste0("My routes: \n", myres)
   } else {
-    slackTxt <- "You do not have a list, try using */set myfavourite __ to __*"
+    slackTxt <- "You do not have any routes saved \nTry */set myfavourite ... to ...*"
   }
     
   # Return string back to slack
