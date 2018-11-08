@@ -14,7 +14,7 @@ main <- function(req, logger = FALSE) {
   allInfo$event$team <- allInfo$team_id
   
   # Block request if necessary
-  blockName <- paste0(allInfo$event$channel, allInfo$event$user, allInfo$event$timestamp)
+  blockName <- paste0(allInfo$event$channel, allInfo$event$user, allInfo$event_time)
 
   # Check the request isn't blocked
   result <- blockName %>% 
