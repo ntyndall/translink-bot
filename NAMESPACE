@@ -3,6 +3,7 @@
 export(StationInfo)
 export(allowed_tags)
 export(api)
+export(conv_time)
 export(create_text)
 export(get_stations)
 export(main)
