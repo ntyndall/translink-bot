@@ -18,7 +18,7 @@ main <- function(req, logger = FALSE) {
 
   # Check the request isn't blocked
   result <- blockName %>% 
-    req$dbr$GET(key = blockName)
+    req$dbr$GET()
 
   if (result %>% is.null) {
     # Set a time-out on the particular request (10 minutes)
