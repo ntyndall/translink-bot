@@ -44,6 +44,8 @@ parse_message <- function(event, dbr) {
         key = tagKey,
         value = paste0(startSt, ":", stopSt)
       )
+      additionalMsg <- paste0("Adding, *", tagKey, "* to favourite list")
+      startSt <- stopSt <- NULL
     }
     retValues <- list(
       startSt = startSt,
@@ -111,7 +113,7 @@ parse_message <- function(event, dbr) {
           startSt <- specialRoute[1]
           stopSt <- specialRoute[2]
         }
-        additionalMsg <- "Setting favourite info"
+        additionalMsg <- NULL
       }
       
       retValues <- list(
