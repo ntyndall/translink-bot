@@ -20,7 +20,7 @@ main <- function(req, logger = FALSE) {
       dbr = req$dbr
   )
   
-  
+  # If station information exists, report back
   if (myStations$updateAction %>% is.null) {
     startStation <- myStations$startSt
     stopStation <- myStations$stopSt
@@ -62,9 +62,12 @@ main <- function(req, logger = FALSE) {
     allresults$callingpoints %<>% `[`(correctWay)
     allresults$myresults %<>% subset(correctWay)
     
+    slacktext <- allresults$myresults %>% 
+      tanslink.bot::create_text()
+    
     mybody <- list(
       token = Sys.getenv("SLACK_TOKEN"), 
-      text = allresults$myresults$time[1] %>% as.character,
+      text = slacktext,
       channel = allInfo$event$channel
     )
   } else {
