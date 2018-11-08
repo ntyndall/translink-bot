@@ -7,13 +7,7 @@ parse_trains <- function(dbr, event) {
   
   # Get the actual message
   myMessage <- event$text
-  
-  # Split by space
-  myMessage %<>% 
-    strsplit(split = " ") %>%
-    purrr::flatten_chr() %>%
-    tolower
-  
+
   # Make sure to statement exists
   if ("to" %in% myMessage) {
   

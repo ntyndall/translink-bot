@@ -25,10 +25,7 @@ parse_info <- function(dbr, event) {
       purrr::flatten_chr()
     
     # Get all keywords
-    kwords <- myMessage %>% 
-      strsplit(split = " ") %>% 
-      purrr::flatten_chr() %>% 
-      tolower
+    kwords <- myMessage
     
     # Check intersection
     multikw <- kwords %>% intersect(allkwords)
