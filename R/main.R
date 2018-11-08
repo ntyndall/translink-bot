@@ -71,7 +71,8 @@ main <- function(req, logger = FALSE) {
     mybody <- list(
       token = Sys.getenv("SLACK_TOKEN"), 
       text = slacktext,
-      channel = allInfo$event$channel
+      channel = allInfo$event$channel,
+      color = "#009990"
     )
   } else {
     mybody <- list(
@@ -83,6 +84,7 @@ main <- function(req, logger = FALSE) {
   # Simple post
   res <- httr::POST(
     url = "https://slack.com/api/chat.postMessage", 
-    body = mybody
+    body = mybody,
+    color = "#009990"
   )
 }
