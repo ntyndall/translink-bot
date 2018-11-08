@@ -19,7 +19,7 @@ parse_req <- function(bodyTxt) {
     bodyTxt$team_domain, "~", bodyTxt$team_id, "|",
     bodyTxt$channel_name, "~", bodyTxt$channel_id, "|",
     bodyTxt$user_name, "~", bodyTxt$user_id, "\n",
-    bodyTxt$text
+    bodyTxt$text, "\n"
   )
 
   # Update the incoming message
