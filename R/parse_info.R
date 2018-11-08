@@ -3,55 +3,72 @@
 #' @export
 
 
-parse_info <- function(dbr, allFavs, myMessage) {
+parse_info <- function(dbr, event) {
 
-  # Set up pipeline
-  redpipe <- redux::redis
+  myMessage <- event$text
   
-  # Get all keywords
-  allkwords <- allFavs %>% 
-    strsplit(split = ":") %>% 
-    purrr::map(3) %>% 
-    purrr::flatten_chr()
+  # Look up ALL favourites
+  allFavs <- paste0(event$team_id, ":", event$user_id, "*") %>% 
+    dbr$KEYS()
   
-  kword <- translink.bot::which_tag(myMessage, "info")
+  # Flatten list of favourites
+  if (allFavs %>% length %>% `>`(0)) {
+    allFavs %<>% purrr::flatten_chr()
   
-  if (kword == "all") {
-    results <- dbr$pipeline(
-      .commands = lapply(
-        X = allFavs,
-        FUN = function(x) x %>% redpipe$GET()
-      )
-    ) %>%
+    # Set up pipeline
+    redpipe <- redux::redis
+    
+    # Get all keywords
+    allkwords <- allFavs %>% 
+      strsplit(split = ":") %>% 
+      purrr::map(3) %>% 
       purrr::flatten_chr()
     
-    favnames <- allkwords
-  } else if (kword %in% allkwords) {
-    # Which one?
-    results <- allFavs[kword %>% `==`(allkwords) %>% which] %>% dbr$GET() 
-    favnames <- kword
+    # Get all keywords
+    kwords <- myMessage %>% 
+      strsplit(split = " ") %>% 
+      purrr::flatten_chr()
+    
+    # Check intersection
+    multikw <- kwords %>% intersect(allkwords)
+    
+    if ("all" %in% kwords) {
+      results <- dbr$pipeline(
+        .commands = lapply(
+          X = allFavs,
+          FUN = function(x) x %>% redpipe$GET()
+        )
+      ) %>%
+        purrr::flatten_chr()
+      
+      favnames <- allkwords
+    } else if (multikw %>% length %>% `>`(0)) {
+      # Which one? match them up first
+      results <- dbr$pipeline(
+        .commands = lapply(
+          X = allFavs[multikw %>% match(allkwords)],
+          FUN = function(x) x %>% redpipe$GET()
+        )
+      ) %>%
+        purrr::flatten_chr()
+
+      favnames <- multikw
+    } else {
+      return(paste0("Could not find any details matching ..."))
+    }
+    
+    forslack <- results %>% 
+      strsplit(split = ":") %>% 
+      purrr::map(function(x) x %>% paste(collapse = " to ")) %>% 
+      purrr::flatten_chr()
+    
+    myres <- paste(paste0(" - ", favnames, " : ", forslack), collapse = " \n")
+
+    slackTxt <- paste0("My routes: \n", myres)
   } else {
-    return(
-      list(
-        startSt = NULL,
-        stopSt = NULL,
-        updateAction = paste0("No favourites matching : ", kword)
-      )
-    )
+    slackTxt <- "You do not have a list, try using */set myfavourite __ to __*"
   }
-  
-  forslack <- results %>% 
-    strsplit(split = ":") %>% 
-    purrr::map(function(x) x %>% paste(collapse = " to ")) %>% 
-    purrr::flatten_chr()
-  
-  myres <- paste(paste0(favnames, " : ", forslack), collapse = " \n")
-  
-  return(
-    list(
-      startSt = NULL,
-      stopSt = NULL,
-      updateAction = paste0("Favourite information ... \n", myres)
-    )
-  )
+    
+  # Return string back to slack
+  return(slackTxt)
 }

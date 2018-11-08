@@ -4,5 +4,5 @@
 \alias{parse_info}
 \title{Parse Info}
 \usage{
-parse_info(dbr, allFavs, myMessage)
+parse_info(dbr, event)
 }
