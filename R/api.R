@@ -12,6 +12,12 @@ api <- function() {
   details <- system.file("extdata", "params.yaml", package = "translink.bot") %>%
     yaml::yaml.load_file()
 
+  # Load station list
+  system.file("extdata", "trainlines.json", package = "translink.bot") %>% 
+    jsonlite::fromJSON() %>%
+    `[[`("lines") %>% 
+    translink.bot::station_lines()  
+  
   # Run the API
   pl$run(
     port = details$port, 
