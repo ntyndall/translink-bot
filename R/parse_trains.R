@@ -40,7 +40,10 @@ parse_trains <- function(event) {
     
     # Make sure trains are still running
     if (allresults$myresults %>% is.null) {
-      slackTxt <- "Trains are not running right now - check back in the morning!"
+      slackTxt <- data.frame(
+        fallback = "Trains are not running right now - check back in the morning!",
+        pretext = "Trains are not running right now - check back in the morning!"
+      )
     } else {
       correctWay <- lapply(
         X = allresults$callingpoints,
@@ -59,9 +62,12 @@ parse_trains <- function(event) {
         ) 
     }
   } else {
-    slackTxt <- "Could not find `to` tag..."
+    slackTxt <- data.frame(
+      fallback = "Could not find `to` tag...",
+      pretext = "Could not find `to` tag..."
+    )
   }
   
   # Return text for slack
-  return(slackTxt)
+  return(list(attachments = slackTxt) %>% jsonlite::toJSON())
 }
