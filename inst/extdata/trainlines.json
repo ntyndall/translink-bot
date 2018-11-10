@@ -6,6 +6,11 @@
       "line": 1
     },
     {
+      "description": "Portadown to Bangor",
+      "code": "PD:BR",
+      "line": 1
+    },
+    {
       "description": "Lisburn to Bangor",
       "code": "LB:BR",
       "line": 1
