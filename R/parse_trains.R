@@ -3,7 +3,7 @@
 #' @export
 
 
-parse_trains <- function(event) {
+parse_trains <- function(dbr, event) {
   
   # Get the actual message
   myMessage <- event$text
@@ -57,6 +57,7 @@ parse_trains <- function(event) {
       
       slackTxt <- allresults %>% 
         translink.bot::create_text(
+          dbr = dbr,
           startStation = startSt,
           stopStation = stopSt
         ) 

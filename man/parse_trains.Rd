@@ -4,5 +4,5 @@
 \alias{parse_trains}
 \title{Parse Trains}
 \usage{
-parse_trains(event)
+parse_trains(dbr, event)
 }
