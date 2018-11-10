@@ -23,8 +23,8 @@ create_text <- function(allresults, startStation, stopStation) {
   headTxt <- paste0("Trains from *", startStation, "* to * ", stopStation, "* (", incoming$originname[1], "/", incoming$name[1], " line)")
   
   # Start to accumulate information
-  infoTxt <- paste0(" - Depart : *", incoming$time, "* // Arrive : *", etas, "*")
-    
+  infoTxt <- paste0("Depart : *", incoming$time, "* // Arrive : *", etas, "*")
+  
   # Chceck if any trains are delayed
   delayedTr <- incoming$Status %>% 
     `==`("On time") %>% 
@@ -35,7 +35,20 @@ create_text <- function(allresults, startStation, stopStation) {
   if (delayedTr %>% any) {
     incoming$Status[delayedTr] <- paste0(" [ Delayed by ", incoming$Minutes[delayedTr], " minutes ]")
   }
+  
+  # Prepare the data structure
+  actualTimes <- paste0(infoTxt, incoming$Status)
+  
+  # Need to get the actual colours at some point
+  lineColors <- "#7CD197" %>% rep(actualTimes %>% length)
 
-  # Return slack message
-  return(paste(c(headTxt, paste0(infoTxt, incoming$Status)), collapse = "\n"))
+  # Data frame for slack message
+  return(
+    data.frame(
+      pretext = c(headTxt, NA %>% rep(actualTimes %>% length)),
+      fallback = c(headTxt, paste0(" - ", actualTimes)),
+      text = c(NA, actualTimes),
+      color = c(NA, lineColors)
+    )
+  )
 }
