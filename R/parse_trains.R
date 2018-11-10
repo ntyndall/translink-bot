@@ -38,21 +38,26 @@ parse_trains <- function(event) {
     allresults <- startCode %>% 
       translink.bot::query_live()
     
-    correctWay <- lapply(
-      X = allresults$callingpoints,
-      FUN = function(x) if (stopSt %in% (x %>% `[[`("Name") %>% as.character)) T else F 
-    ) %>% 
-      purrr::flatten_lgl()
-    
-    # Subset the right way details
-    allresults$callingpoints %<>% `[`(correctWay)
-    allresults$myresults %<>% subset(correctWay)
-    
-    slackTxt <- allresults %>% 
-      translink.bot::create_text(
-        startStation = startSt,
-        stopStation = stopSt
-      )
+    # Make sure trains are still running
+    if (allresults$myresults %>% is.null) {
+      slackTxt <- "Trains are not running right now - check back in the morning!"
+    } else {
+      correctWay <- lapply(
+        X = allresults$callingpoints,
+        FUN = function(x) if (stopSt %in% (x %>% `[[`("Name") %>% as.character)) T else F 
+      ) %>% 
+        purrr::flatten_lgl()
+      
+      # Subset the right way details
+      allresults$callingpoints %<>% `[`(correctWay)
+      allresults$myresults %<>% subset(correctWay)
+      
+      slackTxt <- allresults %>% 
+        translink.bot::create_text(
+          startStation = startSt,
+          stopStation = stopSt
+        ) 
+    }
   } else {
     slackTxt <- "Could not find `to` tag..."
   }
