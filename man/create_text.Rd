@@ -4,5 +4,5 @@
 \alias{create_text}
 \title{Create Text}
 \usage{
-create_text(allresults, startStation, stopStation)
+create_text(allresults, dbr, startStation, stopStation)
 }

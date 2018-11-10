@@ -3,7 +3,7 @@
 #' @export
 
 
-create_text <- function(allresults, startStation, stopStation) {
+create_text <- function(allresults, dbr, startStation, stopStation) {
   
   # Get ETA's
   etas <- allresults$callingpoints %>% 
@@ -41,11 +41,20 @@ create_text <- function(allresults, startStation, stopStation) {
     incoming$Status[delayedTr] <- paste0(" [ Delayed by ", incoming$Minutes[delayedTr], " minutes ]")
   }
   
+  # Get origin destination combo
+  originDest <- incoming$origintiploc %>% 
+    paste0(":", incoming$tiploc)
+  
+  lineColors <- c()
+  for (i in 1:(infoTxt %>% length)) {
+    res <- "stationlist" %>% 
+      dbr$HMGET(field = originDest[i]) %>% 
+      `[[`(1)
+    lineColors %<>% c(if (res %>% is.null) "#000000" else res)
+  }
+  
   # Prepare the data structure
   actualTimes <- paste0(infoTxt, incoming$Status)
-  
-  # Need to get the actual colours at some point
-  lineColors <- "#7CD197" %>% rep(actualTimes %>% length)
 
   # Data frame for slack message
   return(
