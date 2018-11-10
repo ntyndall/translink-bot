@@ -8,7 +8,12 @@ create_text <- function(allresults, startStation, stopStation) {
   # Get ETA's
   etas <- allresults$callingpoints %>% 
     lapply(
-      FUN = function(x) x %>% `[[`("etarr") %>% `[`(x %>% nrow) %>% as.character
+      FUN = function(x) {
+        x %>% 
+          `[[`("etarr") %>%
+          `[`(x %>% `[[`("Name") %>% as.character %>% `==`(stopStation) %>% which) %>% 
+          as.character
+      }
     ) %>% 
     purrr::flatten_chr()
   
