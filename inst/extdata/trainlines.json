@@ -1,0 +1,44 @@
+{
+  "lines": [
+    {
+      "description": "Portadown to Great Victoria Street",
+      "code": "PD:GV",
+      "line": 1
+    },
+    {
+      "description": "Lisburn to Bangor",
+      "code": "LB:BR",
+      "line": 1
+    },
+    {
+      "description": "Newry to Bangor",
+      "code": "NY:BR",
+      "line": 1
+    },
+    {
+      "description": "Larne Harbour to Great Victoria Street",
+      "code": "LR:BR",
+      "line": 2
+    },
+    {
+      "description": "Whitehead to Great Victoria Street",
+      "code": "WD:GV",
+      "line": 2
+    },
+    {
+      "description": "Londonderry to Great Victoria Street",
+      "code": "LY:GV",
+      "line": 3
+    },
+    {
+      "description": "Portrush to Coleraine",
+      "code": "PH:CE",
+      "line": 4
+    },
+    {
+      "description": "Dublin Connolly to Lanyon Place (Central)",
+      "code": "DN:CL",
+      "line": 5
+    }
+    ]
+}
