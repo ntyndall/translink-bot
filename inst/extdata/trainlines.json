@@ -45,5 +45,27 @@
       "code": "DN:CL",
       "line": 5
     }
-    ]
+  ],
+  "order": [
+    {
+      "line": 1,
+      "stations": "Newry - Portadown - Lisbun - Great Victoria Street - Bangor"
+    },
+    {
+      "line": 2,
+      "stations": "Great Victoria Street - Whitehead - Larne Harbour"
+    },
+    {
+      "line": 3,
+      "stations": "Great Victoria Street - Londonderry"
+    },
+    {
+      "line": 4,
+      "stations": "Coleraine - Portrush"
+    },
+    {
+      "line": 5,
+      "stations": "Dublin Connolly to Lanyon Place (Central)"
+    }
+  ]
 }
