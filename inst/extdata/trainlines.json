@@ -31,6 +31,21 @@
       "line": 2
     },
     {
+      "description": "Portadown to Larne Harbour",
+      "code": "PD:LR",
+      "line": 2
+    },
+    {
+      "description": "Larne Town to Great Victoria Street",
+      "code": "LN:GV",
+      "line": 2
+    },
+    {
+      "description": "Larne Harbour to Lanyon Place (Central)",
+      "code": "LR:CL",
+      "line": 2
+    },
+    {
       "description": "Londonderry to Great Victoria Street",
       "code": "LY:GV",
       "line": 3
