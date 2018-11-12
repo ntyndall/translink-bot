@@ -7,8 +7,8 @@ station_lines <- function(stationlines) {
   
   # Define a colour set 
   colSet <- RColorBrewer::brewer.pal(
-    n = 12,
-    name = "Set3"
+    n = 9,
+    name = "Set1"
   )
   
   # Set up a temporary redis connection

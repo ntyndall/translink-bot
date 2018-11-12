@@ -18,10 +18,10 @@ parse_lines <- function(dbr) {
   return(
     list(
       attachments = data.frame(
-        pretext = "Listing available train lines + colours;",
-        fallback = paste0(" - ",  mylines),
-        text = mylines,
-        color = results %>% `[`(c(T, F)) %>% purrr::flatten_chr()
+        pretext = c("Listing available train lines + colours;", NA %>% rep(mylines %>% length)),
+        fallback = c(NA, paste0(" > ",  mylines)),
+        text = c(NA, mylines),
+        color = c(NA, results %>% `[`(c(T, F)) %>% purrr::flatten_chr())
       )
     ) %>% 
       jsonlite::toJSON()
