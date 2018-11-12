@@ -4,6 +4,13 @@
 
 
 station_lines <- function(stationlines) {
+  
+  # Define a colour set 
+  colSet <- RColorBrewer::brewer.pal(
+    n = 12,
+    name = "Set3"
+  )
+  
   # Set up a temporary redis connection
   rcon <- redux::hiredis()
   
@@ -11,31 +18,38 @@ station_lines <- function(stationlines) {
   mf <- function(x, i) x %>% purrr::map(i)%>% purrr::flatten_chr() 
   
   # Remove the current station list hash just for safety
-  "stationlist" %>% rcon$DEL()
+  "stationcolors" %>% rcon$DEL()
+  "stationlines" %>% rcon$DEL()
+
+  # Define the line codes data frame
+  linecodes <- stationlines$lines
   
   # Split up the codes
-  splitends <- stationlines$code %>% 
+  splitends <- linecodes$code %>% 
     strsplit(split = "[:]")
   
   # Double length vector 
-  newcodes <- stationlines$code %>% 
+  newcodes <- linecodes$code %>% 
     c(splitends %>% mf(2) %>% paste0(":", splitends %>% mf(1)))
   
   # Also for line number
-  newlines <- stationlines$line %>% 
-    rep(2)
-  
-  # Subset some colors (Shouldn't be more than 12 lines...)
-  mycolors <- RColorBrewer::brewer.pal(n = 12, name = "Set3") %>% 
-    `[`(newlines)
+  mycolors <- colSet %>% 
+    `[`(linecodes$line %>% rep(2))
   
   # Set the colours in a redis hash
-  "stationlist" %>% 
+  "stationcolors" %>% 
     rcon$HMSET(
       field = newcodes, 
       value = mycolors
     )
-  
+
+  # Now insert the station lines
+  "stationlines" %>%
+    rcon$HMSET(
+      field = colSet %>% `[`(stationlines$order$line),
+      value = stationlines$order$stations
+    )
+
   # Remove the temporary connection
   rm(rcon)
 }
