@@ -4,5 +4,5 @@
 \alias{parse_lines}
 \title{Parse Lines}
 \usage{
-parse_lines(dbr, event)
+parse_lines(dbr)
 }
