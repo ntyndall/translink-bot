@@ -48,6 +48,25 @@ query_live <- function(stationCode) {
     
     # Create data frame
     myresults %<>% purrr::reduce(cbind)
+    
+    # Append the last destination name onto the callingpoints
+    callingpoints <- lapply(
+      X = 1:(callingpoints %>% length),
+      FUN = function(x) {
+        callingpoints[[x]] %>% rbind(
+          data.frame(
+            Name = myresults$name[x],
+            tiploc = myresults$tiploc[x],
+            crs = myresults$crs[x],
+            ttarr = myresults$ttarr[x],
+            ttdep = myresults$ttarr[x],
+            etarr = myresults$etarr[x],
+            etdep = myresults$etarr[x],
+            type = "T"
+          )
+        )
+      }
+    )
   } else  {
     return(list(myresults = NULL, callingPoints = NULL))
   }
