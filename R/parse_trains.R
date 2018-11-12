@@ -34,6 +34,10 @@ parse_trains <- function(dbr, event) {
             which.min
       )
     
+    # Make sure stopStation has a match!
+    stopSt <- station.list$name %>% 
+      `[`(stopSt %>% stringdist::stringdist(station.list$name, method = 'jw') %>% which.min)
+    
     # Get calling information
     allresults <- startCode %>% 
       translink.bot::query_live()
