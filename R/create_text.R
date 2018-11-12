@@ -47,7 +47,7 @@ create_text <- function(allresults, dbr, startStation, stopStation) {
   
   lineColors <- c()
   for (i in 1:(infoTxt %>% length)) {
-    res <- "stationlist" %>% 
+    res <- "stationcolors" %>% 
       dbr$HMGET(field = originDest[i]) %>% 
       `[[`(1)
     lineColors %<>% c(if (res %>% is.null) "#000000" else res)
