@@ -38,7 +38,11 @@ create_text <- function(allresults, dbr, startStation, stopStation) {
   # Convert for printing
   incoming$Status <- paste0(" [ ", incoming$Status, " ]")
   if (delayedTr %>% any) {
-    incoming$Status[delayedTr] <- paste0(" [ Delayed by ", incoming$Minutes[delayedTr], " minutes ]")
+    todelay <- incoming$Minutes[delayedTr]
+    if ("" %>% `==`(todelay) %>% any) {
+      todelay["" %>% `==`(todelay) %>% which] <- "?"
+    }
+    incoming$Status[delayedTr] <- paste0(" [ Delayed by ", todelay, " minutes ]")
   }
   
   # Get origin destination combo
