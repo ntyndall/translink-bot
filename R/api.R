@@ -14,8 +14,7 @@ api <- function() {
 
   # Load station list
   system.file("extdata", "trainlines.json", package = "translink.bot") %>% 
-    jsonlite::fromJSON() %>%
-    `[[`("lines") %>% 
+    jsonlite::fromJSON() %>% 
     translink.bot::station_lines()  
   
   # Run the API
