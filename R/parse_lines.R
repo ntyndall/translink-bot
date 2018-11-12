@@ -4,16 +4,15 @@
 
 
 parse_lines <- function(dbr) {
-  
-  # Get the actual message
-  myMessage <- event$text
-  
+
   # Parse the lines
   results <- "stationlines" %>% 
     dbr$HGETALL()
-  
-  results %>% `[`(c(T, F)) %>% purrr::flatten_chr()
-  mylines <- results %>% `[`(c(F, T)) %>% purrr::flatten_chr()
+
+  # Get actual lines as a character vector
+  mylines <- results %>% 
+    `[`(c(F, T)) %>%
+    purrr::flatten_chr()
 
   # Return the lines back
   return(
