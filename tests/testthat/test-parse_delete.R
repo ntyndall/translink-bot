@@ -1,4 +1,4 @@
-context("test-parse_get.R")
+context("test-parse_delete.R")
 
 # Set up default team and user info
 event <- list(
