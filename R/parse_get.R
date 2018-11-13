@@ -34,8 +34,10 @@ parse_get <- function(dbr, event) {
       )
 
       # Query train timetable
-      slackTxt <- list(text = myroute) %>%
-        translink.bot::parse_trains()
+      slackTxt <- dbr %>%
+        translink.bot::parse_trains(
+          event = list(text = myroute)
+        )
     } else {
       slackTxt <- paste0("This route is not stored yet!")
     }
