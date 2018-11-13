@@ -14,16 +14,16 @@ conv_time <- function(z) {
   return(results)
 }
 
-
 #' @title Split By Space
 #' 
 #' @export
 
-split_space <- function(x) x %>% strsplit(split = " ") %>% purrr::flatten_chr()
 
+split_space <- function(x) x %>% strsplit(split = " ") %>% purrr::flatten_chr()
 
 #' @title Format Station Name
 #' 
 #' @export
+
 
 format_name <- function(x) x %>% tolower %>% Hmisc::upFirst() %>% paste(collapse = " ")
