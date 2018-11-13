@@ -80,6 +80,7 @@ function(req, res) {
   # Update headers
   res$headers <- list("Content-Type" = "application/json")
   
+  # Return response
   res
 }
 
@@ -101,13 +102,15 @@ function(req, res) {
 
 function(req, res) {
   # Return the response back
-  mytext <- req$dbr %>%
+  res$body <- req$dbr %>%
     translink.bot::parse_get(
       event = req$postBody %>% translink.bot::parse_req()
     )
-  
-  res$body <- mytext
+
+  # Update headers
   res$headers <- list("Content-Type" = "application/json")
+  
+  # Return response
   res
 }
 
@@ -132,7 +135,10 @@ function(req, res) {
   res$body <- req$dbr %>%
     translink.bot::parse_lines()
   
+  # Update headers
   res$headers <- list("Content-Type" = "application/json")
+  
+  # Return response
   res
 }
 
