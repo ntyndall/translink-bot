@@ -21,6 +21,11 @@
       "line": 1
     },
     {
+      "description": "Great Victoria Street to Bangor",
+      "code": "GV:BR",
+      "line": 1
+    },
+    {
       "description": "Larne Harbour to Great Victoria Street",
       "code": "LR:BR",
       "line": 2
